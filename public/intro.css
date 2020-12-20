@@ -1,0 +1,81 @@
+body{
+	height:100%;
+	width: 100%;
+	background: #151515;
+}
+
+#main{
+	color: lightgrey;
+	padding: 5%;
+	display: flex;
+}
+
+#playerList, #right{
+	width: 50%;
+	margin: 10px;
+}
+
+#playerList{
+	width: 30%;
+	margin: 0% 5% 0 0;
+	text-align:center;
+	font-size: 42pt;
+}
+
+ul{
+	text-align: center;
+	border: solid white 2px;
+	padding: 5px 0;
+	margin: 0px;
+}
+
+li{
+	list-style-type: none;
+	margin: 10px;
+	font-size: 24pt;
+}
+
+li:not(:last-child){
+	border-bottom: solid lightgrey 1px;
+
+}
+
+#right{
+	margin-left: 30%;
+}
+
+#up{
+	display: flex;
+}
+
+#code{
+	color: paleturquoise;
+	padding: 7px;
+	border: solid lightgrey 2px;
+	font-size: 42pt;
+}
+
+
+#copy, #start{
+	height: 100%;
+	background: transparent;
+	color: lightgrey;
+	border: solid white 1px;
+	margin-left: 10px;
+	border-radius: 0px;
+	padding: 5px;
+	font-size: 16pt;
+}
+
+#bottom{
+	position: absolute;
+	bottom: 15%;
+	right: 20%;
+}
+
+#start{
+	padding: 20px;
+	background-color: #00aa00;
+	font-size: 32pt;
+
+}
