@@ -1,0 +1,59 @@
+Canvas
+{
+	background: #151515;
+}
+
+body
+{
+	position:fixed;
+  	touch-action: manipulation;	
+	background: #444455;
+	padding:0;
+	margin:0;
+	overflow: none;
+	height: 100%;
+}
+
+#players{
+	z-index: 100;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	position:sticky;
+	height: 3%;
+	top:0px;
+}
+
+#homebar{
+	display: inline;
+}
+
+#homebar li{
+	text-align:center;
+	font-size: 15pt;
+	margin-right: 15px;
+	display: inline;
+	padding-right: 15px;
+}
+
+#homebar li:not(:last-child){
+	border-right: solid #ffaaaa 1px;
+}
+
+button{
+	background: transparent;
+	color: lightgrey;
+	font-size: 1em;
+	border: none;
+	position:absolute;
+	top: 30%;
+	right: 1%;
+
+}
+button:hover{
+	color: grey;
+	cursor: pointer;
+}
+button:active{
+	color: white;
+}
+
