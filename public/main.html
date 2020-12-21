@@ -1,17 +1,39 @@
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="../menus.css">
-		<script src="../p5.js"></script> 	
-		<script src="../main.js"></script> 	
-		<title>Fake Artist</title>
-		<div id="players">
-			<ul id= "homebar">
-			</ul>	
-			<button onclick="clean()">Clear</button>	
+		<link rel="stylesheet" type="text/css" href="main.css">
+		<script src="p5.js"></script> 	
+		<script src="main.js"></script> 	
+		<title>Patently Stupid</title>
+	</head>	
+	<body>
+		<div id="canvas"></div>	
+		<div id="main">
+			<div id="playerList">
+				<p>Player List:<p>
+				<ul>
+					<li>Player1</li>	
+					<li>Player2</li>	
+					<li>Player3</li>	
+					<li>Player4</li>	
+					<li>Player5</li>	
+					<li>Player6</li>	
+					<li>Player7</li>
+					<li>Player8</li>	
+				</ul>	
+			</div>	
+			<div id="right">
+				<div id="up">
+					<div id="code">XJKW</div>
+					<div id="button">
+						<button id="copy">Copy</button>	
+					</div>	
+				</div>
+					
+				<div id="bottom">
+					<button id="start">Start</button>	
+				</div>	
+			</div>	
 		</div>	
-	</head>
-	<body onmousedown="down()" onmousemove="move()" onmouseup="up()">
-	</body>
+
+	</body>	
 </html>
-
-
