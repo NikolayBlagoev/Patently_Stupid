@@ -17,11 +17,11 @@ body
 }
 .menu
 {
-	width: 450px;
-	height: 500px;
+	width: 25%;
+	height: 35em;
 	
 	margin: auto;
-	margin-top:12%;
+	margin-top:8%;
 	
 	background: #fafafa;
 
@@ -36,19 +36,21 @@ body
 .play
 {
 	cursor:pointer;
+	color: #515151;	
 	font-family: "arial";
+	font-size: 32pt;
 	user-select: none;
 	margin:auto;
-
+	margin-top: 4%;
 	background: transparent;
 	
-	width: 100px;
+	width: 40%;
 
 	border:solid 1px black;
 
 	font-size: 16pt;
 
-	padding: 16px 100px 16px 100px;
+	padding: 5% 10%;
 
 
 	transition: padding 0.2s;
@@ -63,18 +65,22 @@ body
 .play:hover
 {
 	background: rgba(228, 176, 127, 0.3);
-	padding: 26px 130px 26px 130px;
+	padding: 6% 20%;
 
 }
 
-.play::after
+#join::after
 {
-	content:"Play!";
+	content:"Join game!";
 }
 
+#create::after
+{
+	content:"Create game!";
+}
 .names{
 	padding: 10px;
-	margin-bottom: 10%;
+	margin-bottom: 6%;
 }
 
 .title
@@ -97,7 +103,7 @@ li
 }
 .how
 {
-	margin-top:30px;
+	margin-top:4%;
 	font-size:18;
 	text-decoration: underline;
 	font-style:italic;
