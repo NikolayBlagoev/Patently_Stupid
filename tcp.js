@@ -3,6 +3,7 @@ var http = require("http");;
 var websocket = require("ws");
 var url = require("url");
 var path = require("path");
+const { throws, AssertionError } = require("assert");
 
 var app = express();
 let port = process.env.PORT || 80;
@@ -13,6 +14,45 @@ var colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', 
 var players = [];
 
 var ids = 0;
+
+/*
+Game object needs:
+
+array of players
+identifying code
+identifier for host
+*/
+
+function Game() {
+	this.host = undefined;
+	this.id = undefined;
+	this.players = {};
+	this.size = 0;
+	this.waiting_for_players = true;
+	this.closed = false;
+
+	this.generate = function(host, id){
+		this.host=host;
+		this.id=id;
+		size++;
+		this.players.push(host);
+	}
+
+	this.addPlayer = function(player){
+		if(size==8) return 1;
+		size++;
+		this.players.push(player);
+		return 0;
+	}
+
+
+};
+
+
+function Player(id, p_websocket) {
+	this.id = id;
+	this.p_websocket = p_websocket;
+};
 
 app.use(express.static(__dirname + "/public"));
 

@@ -6,11 +6,23 @@ function press(event) {
 
 function play(){
 	var name = document.getElementById("uname").value;
+	var roomcode = document.getElementById("roomcode").value;
+	if(roomcode==""){
+		alert("Please, enter a room code");
+		return;
+	} 
+	
 	if(name != "")
 		window.location.href='../play/?name='+name;
 	else alert("enter a username");
 }
 
+function create(){
+	var name = document.getElementById("uname").value;
+	if(name != "")
+		window.location.href='../play/?name='+name;
+	else alert("enter a username");
+}
 window.onload = function()
 {
 	document.getElementById("uname").value = "";
