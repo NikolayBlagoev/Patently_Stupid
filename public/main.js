@@ -1,15 +1,13 @@
-let blobs = [];
-var blob_count = 300;
+let spermies = [];
+var spermie_count = 300;
 
 function setup(){
 	var canvas = createCanvas(window.innerWidth, window.innerHeight);
 	canvas.parent("canvas");
-	for(var i = 0; i < blob_count; i++){
-		blobs[i] = {
-			x: random(0, width),
-			y: random(0, height)
-		}
-	}
+
+	for(var i = 0; i < spermie_count; i++)
+		spermies[i] = new spermie(random(width), random(height), 4, 5);
+
 	noStroke();
 }
 
@@ -19,24 +17,39 @@ function draw(){
 	rect(0, 0, width, height);
 	fill("#f3eac0");
 
-	deathRate = blob_count/200;
+	deathRate = spermie_count/200;
+	
+	spermies.forEach(x => {
+		x.show();
+		x.update();
+		x.steer(350);
+	});
 
-	for(var i = 0; i < blobs.length; i++){
-		ellipse(blobs[i].x, blobs[i].y, 5, 5);
-		blobs[i].x += random(-speed, speed);
-		blobs[i].y += random(-speed, speed);
-		steer(blobs[i], 350);
+	for(var i = 0; i < deathRate; i++) spermies[floor(random(spermies.length))] = new spermie(random(width), random(height), 4, 5);
+}
+
+class spermie{
+	constructor(x, y, speed, size){
+		this.pos = {x: x, y: y};
+		this.speed = speed;
+		this.size = size;
 	}
 
-	for(var i = 0; i < deathRate; i++){
-		blobs[floor(random(blobs.length))] = {
-				x: random(0, width),
-				y: random(0, height)
-		}
+	update(){
+		this.pos.x += random(-speed, speed);
+		this.pos.y += random(-speed, speed);		
+	}
+
+	steer(mult){
+		this.pos.x += (mouseX-this.pos.x+random(10))/mult;
+		this.pos.y += (mouseY-this.pos.y+random(10))/mult;
+	}
+
+	show(){
+		ellipse(this.pos.x, this.pos.y, this.size, this.size);
 	}
 }
 
-function steer(blob, mult){
-	blob.x += (mouseX-blob.x+random(10))/mult;
-	blob.y += (mouseY-blob.y+random(10))/mult;
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
