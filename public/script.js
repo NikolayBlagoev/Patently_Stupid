@@ -5,6 +5,7 @@ function press(event) {
 }
 
 function play(){
+	console.log("hekk")
 	var name = document.getElementById("uname").value;
 	var roomcode = document.getElementById("roomcode").value;
 	if(roomcode==""){
@@ -12,17 +13,30 @@ function play(){
 		return;
 	} 
 	
-	if(name != "")
-		window.location.href='../play/?name='+name;
-	else alert("enter a username");
+	if(name != ""){
+		var d = new Date();
+  		d.setTime(d.getTime() + (4*24*60*60*1000));
+  		var expires = "expires="+ d.toUTCString();
+		document.cookie = "Username=" + name + ";" + expires + ";path=/";
+		console.log(document.cookie)
+		window.location.href='../play/?game='+roomcode;
+	} else alert("enter a username");
 }
 
 function create(){
 	var name = document.getElementById("uname").value;
-	if(name != "")
-		window.location.href='../play/?name='+name;
-	else alert("enter a username");
+	if(name != ""){
+		var d = new Date();
+  		d.setTime(d.getTime() + (4*24*60*60*1000));
+  		var expires = "expires="+ d.toUTCString();
+		document.cookie = "Username=" + name + ";" + expires + ";path=/";
+		console.log(document.cookie)
+		window.location.href='../create';
+	} else alert("enter a username");
 }
+
+
+
 window.onload = function()
 {
 	document.getElementById("uname").value = "";

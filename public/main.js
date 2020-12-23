@@ -1,5 +1,15 @@
+var host = location.origin.replace(/^http/, 'ws')
+var socket = new WebSocket(host);
+
 let spermies = [];
 var spermie_count = 300;
+let players = [];
+
+
+function Player(id, p_websocket) {
+	this.id = id;
+	this.p_websocket = p_websocket;
+};
 
 function setup(){
 	var canvas = createCanvas(window.innerWidth, window.innerHeight);
@@ -52,4 +62,13 @@ class spermie{
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+}
+
+window.onload = function(){
+	document.getElementById("code").innerHTML = new URL(window.location.href).searchParams.get("game");;
+	
+}
+
+function copyCode(){
+	navigator.clipboard.writeText(window.location)
 }

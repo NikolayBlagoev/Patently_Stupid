@@ -61,6 +61,8 @@ li:not(:last-child){
 	padding: 7px;
 	border: solid lightgrey 2px;
 	font-size: 42pt;
+	width: 25%;
+	text-align: center;
 }
 
 
