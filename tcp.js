@@ -43,9 +43,9 @@ class Game {
 	}
 
 	addPlayer(p_websocket, name){
-		if(this.size==8) throw new Error("Game is full.");
+		if(this.isFull()) throw new Error("Game is full.");
+		
 		var id = this.generateId();
-
 		this.players[id] = new Player(id, p_websocket, name);
 		this.size++;
 
@@ -81,6 +81,10 @@ class Game {
 		for(var player in this.players) if(!this.players[player].closed) names.push(this.players[player].name);
 		return names;
 	}
+
+	isFull(){
+		return this.size >= 8;
+	}
 }
 
 class Player {
@@ -110,7 +114,10 @@ app.get("/", function(req, res)
 app.get("/play", function(req, res)
 {
 	if(games[req.query.game] == undefined) res.sendFile(__dirname + "/public/404.html");
-	else res.sendFile(__dirname + "/public/main.html");
+	else{
+		if(games[req.query.game] != 1 && games[req.query.game].isFull()) res.send("game is full >_<");
+		else res.sendFile(__dirname + "/public/main.html");
+	}
 });
 
 app.get("/create", function(req, res)
@@ -164,8 +171,9 @@ wss.on("connection", function(ws, require)
 	var handler = new Handler();
 	
 	handler.add(function open(message){
-		if(games[room])
 		room = message.room;
+		
+		if(games[room] == undefined) ws.close;
 		
 		if(games[room] == 1){
 			games[room] = new Game(ws);
@@ -177,11 +185,12 @@ wss.on("connection", function(ws, require)
 		else if(games[room].waiting_for_players){
 			console.log("player joined room: " + room)
 			try{
-				if(recon(message) == 0) id = games[room].addPlayer(ws, message.name);
+				if(recon(message) == 0) 
+					id = games[room].addPlayer(ws, message.name);
 			}catch(e){/*game is full; or person already exists*/ console.log(e)}
 		}else{/*game already started; TODO handle reconnecting players*/
 			recon(message);
-		}
+		 }
 
 		games[room].broadcast({status: "names", names: games[room].getNames()})
 
@@ -200,9 +209,9 @@ wss.on("connection", function(ws, require)
 	ws.on('close', function close() {
 		try{
 			games[room].players[id].close();
+			games[room].broadcast({status: "names", names: games[room].getNames()})
 		}catch(e){console.log(e)}
 
-		games[room].broadcast({status: "names", names: games[room].getNames()})
 	});
 
 	ws.on("message", function incoming(message)
@@ -219,7 +228,10 @@ wss.on("connection", function(ws, require)
 	});
 
 	function recon(message){
-		if(games[room].players[message.id] != undefined && !games[room].players[message.id].closed) {
+		//uncomment the second clause to prevent hijacking while still in (unlikely as fuck)
+		//at the cost of a person spamming new tabs (likely af, happened in fake artist, never again.)
+		if(games[room].players[message.id] != undefined 
+			/*&& games[room].players[message.id].closed*/) {
 			games[room].players[message.id].ws = ws;
 
 			if(games[room].host.id == message.id){
