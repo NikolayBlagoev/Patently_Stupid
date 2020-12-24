@@ -14,46 +14,6 @@ app.use(express.static(__dirname + "/public"));
 
 const wss = new websocket.Server({server});
 
-app.get("/", function(req, res)
-{
-	res.sendFile(__dirname + "/public/splash.html");	
-	
-});
-
-app.get("/play", function(req, res)
-{
-	if(games[req.query.game] == undefined) res.sendFile(__dirname + "/public/404.html");
-	else res.sendFile(__dirname + "/public/main.html");
-});
-
-app.get("/create", function(req, res)
-{
-	if(games.size == MAX_GAMES){
-		res.send("We are full");
-		return;
-	}
-
-	var serum = true;
-	var code = '';
-	while(serum){
-		for(var i = 0 ; i<3; i++) code += String.fromCharCode(64 + Math.floor((Math.random() * 20) + 1));
-		
-		if(games[code] == undefined) serum=false;
-	}
-
-	games[code] = 1;
-	games.size++;
-
-	res.redirect("/play/?game=" + code);
-
-});
-
-app.get("/*", function(req, res)
-{
-	res.sendFile(__dirname + "/public/404.html");
-});
-
-
 const MAX_GAMES = 2;
 var games = [];
 games.size = 0;
@@ -139,7 +99,48 @@ class Player {
 	open(){
 		this.closed = false;
 	}
-};
+}
+
+app.get("/", function(req, res)
+{
+	res.sendFile(__dirname + "/public/splash.html");	
+	
+});
+
+app.get("/play", function(req, res)
+{
+	if(games[req.query.game] == undefined) res.sendFile(__dirname + "/public/404.html");
+	else res.sendFile(__dirname + "/public/main.html");
+});
+
+app.get("/create", function(req, res)
+{
+	if(games.size == MAX_GAMES){
+		res.send("We are full");
+		return;
+	}
+
+	var serum = true;
+	var code = '';
+	while(serum){
+		for(var i = 0 ; i<3; i++) code += String.fromCharCode(64 + Math.floor((Math.random() * 20) + 1));
+		
+		if(games[code] == undefined) serum=false;
+	}
+
+	games[code] = 1;
+	games.size++;
+
+	res.redirect("/play/?game=" + code);
+
+});
+
+app.get("/*", function(req, res)
+{
+	res.sendFile(__dirname + "/public/404.html");
+});
+
+
 
 class Handler {
 	constructor(){
@@ -163,7 +164,7 @@ wss.on("connection", function(ws, require)
 	var handler = new Handler();
 	
 	handler.add(function open(message){
-		//TODO make sure room exists
+		if(games[room])
 		room = message.room;
 		
 		if(games[room] == 1){
