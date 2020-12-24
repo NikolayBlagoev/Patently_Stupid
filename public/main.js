@@ -23,8 +23,7 @@ function setup(){
 
 var speed = 4;
 function draw(){
-	fill("#1e264055");
-	rect(0, 0, width, height);
+	setBg("#1e264055");
 	fill("#f3eac0");
 
 	deathRate = spermie_count/200;
@@ -35,24 +34,52 @@ function draw(){
 		x.steer(350);
 	});
 
-	for(var i = 0; i < deathRate; i++) spermies[floor(random(spermies.length))] = new spermie(random(width), random(height), 4, 5);
+	if(spermies.length == 0){
+		//setBg("#1e2640");
+	}
+}
+
+function setBg(col){
+	fill(col);
+	rect(0, 0, width, height);
 }
 
 class spermie{
-	constructor(x, y, speed, size){
+	constructor(x, y, speed, size, index){
 		this.pos = {x: x, y: y};
 		this.speed = speed;
 		this.size = size;
+		this. index = index;
+		this.exploded = false;
 	}
 
 	update(){
-		this.pos.x += random(-speed, speed);
-		this.pos.y += random(-speed, speed);		
+		if(!this.exploded){
+			this.pos.x += random(-speed, speed);
+			this.pos.y += random(-speed, speed);		
+		
+			if(Math.floor(random(200)) == 1){
+				this.pos.x = random(width);
+				this.pos.y = random(height);
+			}
+		}else{
+			this.pos.x += (width/2 - this.pos.x)/-10;
+			this.pos.y += (height/2 - this.pos.y)/-10;
+		}
+
+
+		//an-hero
+		if(this.pos.x > width || this.pos.y > height || this.pos.x < 0 || this.pos.y < 0)
+			spermies.splice(this.index, 1);
 	}
 
 	steer(mult){
 		this.pos.x += (mouseX-this.pos.x+random(10))/mult;
 		this.pos.y += (mouseY-this.pos.y+random(10))/mult;
+	}
+
+	explode(){
+		this.exploded = true;
 	}
 
 	show(){
@@ -71,4 +98,39 @@ window.onload = function(){
 
 function copyCode(){
 	navigator.clipboard.writeText(window.location)
+}
+
+function doNext(){
+	document.getElementById("main").style.visibility = "hidden"; 
+	spermies.forEach(x => {
+		x.explode();
+	});
+}
+
+function start(){
+	socket.send(JSON.stringify({
+		status: "start"
+	}));
+}
+
+let id;
+
+socket.onopen = function(){
+	socket.send(JSON.stringify({
+		status: "open",
+		room: new URL(window.location.href).searchParams.get("game")
+	}));
+}
+
+socket.onmessage = function(event){
+	var stats = JSON.parse(event.data);	
+	switch(stats.status){
+		case "initial":
+			id = stats.id;
+			document.cookie = "sessionId=" + id + ";";
+			break;
+		case "start":
+			doNext();
+			break;
+	}
 }
