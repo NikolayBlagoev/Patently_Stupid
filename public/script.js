@@ -40,7 +40,7 @@ function create(){
 window.onload = function()
 {
 	document.getElementById("uname").value = "";
-	document.getElementById("room").value = "";
+	document.getElementById("roomcode").value = "";
 
 	var modal = document.getElementById("myModal");
 	

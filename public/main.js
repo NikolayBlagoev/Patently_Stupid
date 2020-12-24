@@ -5,6 +5,19 @@ let spermies = [];
 var spermie_count = 300;
 let players = [];
 
+class Handler {
+	constructor(){
+		this.functions = [];
+	}
+
+	add(func){
+		this.functions[func.name] = func;
+	}
+
+	exec(name, parameters){
+		this.functions[name](parameters);
+	}
+}
 
 function Player(id, p_websocket) {
 	this.id = id;
@@ -119,21 +132,32 @@ socket.onopen = function(){
 	socket.send(JSON.stringify({
 		status: "open",
 		room: new URL(window.location.href).searchParams.get("game"),
-		id: parseCookie("sessionId")
+		id: parseCookie("sessionId"),
+		name: parseCookie("Username")
 	}));
 }
 
 socket.onmessage = function(event){
-	var stats = JSON.parse(event.data);	
-	switch(stats.status){
-		case "initial":
-			id = stats.id;
-			document.cookie = "sessionId=" + id + ";";
-			break;
-		case "start":
-			doNext();
-			break;
-	}
+	var stats = JSON.parse(event.data);
+	var handler = new Handler();
+
+	handler.add(function initial(){
+		id = stats.id;
+		document.cookie = "sessionId=" + id + ";";
+	});
+	handler.add(function start(){
+		doNext();
+	});
+	handler.add(function names(){
+		var content = "";
+		stats.names.forEach(name => {
+			content += "<li>" + name + "</li>";
+		});
+		document.getElementById("players").innerHTML = content;
+	});
+
+	handler.exec(stats.status);
+
 }
 
 function parseCookie(name){

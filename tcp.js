@@ -10,101 +10,6 @@ app.use(cookieParser())
 let port = process.env.PORT || 80;
 var server = http.createServer(app).listen(port);
 
-const MAX_GAMES = 2;
-var games = [];
-games.size = 0;
-
-/*
-Game object needs:
-
-array of players
-identifying code
-identifier for host
-*/
-
-class Game {
-	constructor(host_socket){
-		this.size = 1;
-		this.players = [];
-		this.ids = [];
-
-		this.waiting_for_players = true;
-		this.closed = false;
-	
-		var id = this.generateId();
-		this.host = new Player(id, host_socket);
-		this.host.id = id;
-
-		this.players[id] = (this.host);
-	}
-
-	addPlayer(p_websocket){
-		if(this.size==8) throw new Error("Game is full.");
-		var id = this.generateId();
-
-		this.players[this.generateId()] = new Player(id, p_websocket);
-		this.size++;
-
-		return id;
-	}
-
-	generateId(){
-		do{
-			var id = '';
-			for(var i = 0; i < 20; i++) {
-				var r = Math.random();
-				if(r <= 0.33)
-					id += Math.floor(Math.random()*10);
-				else if(r <= 0.66)
-					id += String.fromCharCode(Math.floor((Math.random() * (91-65)) + 65))
-				else
-					id += String.fromCharCode(Math.floor((Math.random() * (123-97)) + 97))
-			}
-		}while(this.ids.includes(id));
-		this.ids.push(id);
-
-		return id;
-	}
-
-	broadcast(message){
-		for(var player in this.players){
-			this.players[player].ws.send(JSON.stringify(message));
-		}
-	}
-}
-
-class Player {
-	constructor(id, ws){
-		this.ws = ws;
-		this.closed = false;	
-		console.log(id);
-		ws.send(JSON.stringify({status: "initial", id: id}));
-	}
-
-	close(){
-		this.console = true;
-	}
-
-	open(){
-		this.closed = false;
-	}
-};
-
-class Handler {
-	constructor(){
-		this.functions = [];
-	}
-
-	add(func){
-		this.functions[func.name] = func;
-	}
-
-	exec(name, parameters){
-		this.functions[name](parameters);
-	}
-}
-
-
 app.use(express.static(__dirname + "/public"));
 
 const wss = new websocket.Server({server});
@@ -149,6 +54,107 @@ app.get("/*", function(req, res)
 });
 
 
+const MAX_GAMES = 2;
+var games = [];
+games.size = 0;
+
+/*
+Game object needs:
+
+array of players
+identifying code
+identifier for host
+*/
+
+class Game {
+	constructor(host_socket){
+		this.size = 1;
+		this.players = [];
+		this.ids = [];
+
+		this.waiting_for_players = true;
+		this.closed = false;
+	
+		var id = this.generateId();
+		this.host = new Player(id, host_socket);
+		this.host.id = id;
+
+		this.players[id] = (this.host);
+	}
+
+	addPlayer(p_websocket, name){
+		if(this.size==8) throw new Error("Game is full.");
+		var id = this.generateId();
+
+		this.players[this.generateId()] = new Player(id, p_websocket, name);
+		this.size++;
+
+		return id;
+	}
+
+	generateId(){
+		do{
+			var id = '';
+			for(var i = 0; i < 20; i++) {
+				var r = Math.random();
+				if(r <= 0.33)
+					id += Math.floor(Math.random()*10);
+				else if(r <= 0.66)
+					id += String.fromCharCode(Math.floor((Math.random() * (91-65)) + 65))
+				else
+					id += String.fromCharCode(Math.floor((Math.random() * (123-97)) + 97))
+			}
+		}while(this.ids.includes(id));
+		this.ids.push(id);
+
+		return id;
+	}
+
+	broadcast(message){
+		for(var player in this.players){ 
+			if(!player.closed) this.players[player].ws.send(JSON.stringify(message));
+		}
+	}
+
+	getNames(){
+		var names = [];
+		for(var player in this.players) if(!player.closed) names.push(this.players[player].name);
+		return names;
+	}
+}
+
+class Player {
+	constructor(id, ws, name){
+		this.ws = ws;
+		this.name = name;
+		this.closed = false;	
+		console.log(id);
+		ws.send(JSON.stringify({status: "initial", id: id}));
+	}
+
+	close(){
+		this.console = true;
+	}
+
+	open(){
+		this.closed = false;
+	}
+};
+
+class Handler {
+	constructor(){
+		this.functions = [];
+	}
+
+	add(func){
+		this.functions[func.name] = func;
+	}
+
+	exec(name, parameters){
+		this.functions[name](parameters);
+	}
+}
+
 wss.on("connection", function(ws, require)
 {
 	var room;
@@ -163,18 +169,21 @@ wss.on("connection", function(ws, require)
 		if(games[room] == 1){
 			games[room] = new Game(ws);
 			id = games[room].host.id;
-			console.log("host, " + id + ", just joined room: " + room);
+			games[room].players[id].name = message.name;
+			console.log("host, " + message.name + ", just joined room: " + room);
 		}
 	
 		else if(games[room].waiting_for_players){
 			console.log("player joined room: " + room)
 			try{
-				if(!recon(message)) id = games[room].addPlayer(ws);
+				if(!recon(message)) id = games[room].addPlayer(ws, message.name);
 			}catch(e){/*game is full; or person already exists*/ console.log(e)}
 		}else{/*game already started; TODO handle reconnecting players*/
 			recon(message);
 		}
-	
+
+		games[room].broadcast({status: "names", names: games[room].getNames()})
+
 	});
 	
 	handler.add(function start(){
@@ -191,6 +200,8 @@ wss.on("connection", function(ws, require)
 		try{
 			games[room].players[id].close();
 		}catch(e){console.log(e)}
+
+		games[room].broadcast({status: "names", names: games[room].getNames()})
 	});
 
 	ws.on("message", function incoming(message)
