@@ -1,8 +1,6 @@
 var express = require("express");
 var http = require("http");;
 var websocket = require("ws");
-var url = require("url");
-var path = require("path");
 var cookieParser = require('cookie-parser')
 const { throws, AssertionError } = require("assert");
 
@@ -92,6 +90,21 @@ class Player {
 	}
 };
 
+class Handler {
+	constructor(){
+		this.functions = [];
+	}
+
+	add(func){
+		this.functions[func.name] = func;
+	}
+
+	exec(name, parameters){
+		this.functions[name](parameters);
+	}
+}
+
+
 app.use(express.static(__dirname + "/public"));
 
 const wss = new websocket.Server({server});
@@ -104,8 +117,8 @@ app.get("/", function(req, res)
 
 app.get("/play", function(req, res)
 {
-	if(games[req.query.game] == undefined) res.send("Room does not exist");
-	res.sendFile(__dirname + "/public/main.html");
+	if(games[req.query.game] == undefined) res.sendFile(__dirname + "/public/404.html");
+	else res.sendFile(__dirname + "/public/main.html");
 });
 
 app.get("/create", function(req, res)
@@ -132,7 +145,7 @@ app.get("/create", function(req, res)
 
 app.get("/*", function(req, res)
 {
-	res.send("404, lost your way kiddo?");
+	res.sendFile(__dirname + "/public/404.html");
 });
 
 
@@ -140,6 +153,39 @@ wss.on("connection", function(ws, require)
 {
 	var room;
 	var id;
+
+	var handler = new Handler();
+	
+	handler.add(function open(message){
+		//TODO make sure room exists
+		room = message.room;
+		
+		if(games[room] == 1){
+			games[room] = new Game(ws);
+			id = games[room].host.id;
+			console.log("host, " + id + ", just joined room: " + room);
+		}
+	
+		else if(games[room].waiting_for_players){
+			console.log("player joined room: " + room)
+			try{
+				if(!recon(message)) id = games[room].addPlayer(ws);
+			}catch(e){/*game is full; or person already exists*/ console.log(e)}
+		}else{/*game already started; TODO handle reconnecting players*/
+			recon(message);
+		}
+	
+	});
+	
+	handler.add(function start(){
+		if(games[room].host.ws == ws){
+			console.log("broadcasting start")
+			games[room].broadcast({status: "start"})
+			games[room].waiting_for_players = false;
+		}else{console.log("rejected a person from starting")}
+	
+	});
+
 
 	ws.on('close', function close() {
 		try{
@@ -152,33 +198,10 @@ wss.on("connection", function(ws, require)
 		try
 		{
 			message = JSON.parse(message);
-			switch(message.status){
-				case "open":
-					//TODO make sure room exists
-					room = message.room;
-					
-					if(games[room] == 1){
-						games[room] = new Game(ws);
-						id = games[room].host.id;
-						console.log("host, " + id + ", just joined room: " + room);
-					}
-
-					else if(games[room].waiting_for_players){
-						console.log("player joined room: " + room)
-						try{
-							if(!recon(message)) id = games[room].addPlayer(ws);
-						}catch(e){/*game is full; or person already exists*/ console.log(e)}
-					}else{/*game already started; TODO handle reconnecting players*/
-						recon(message);
-					}
-					break;
-				case "start":
-					if(games[room].host.ws == ws){
-						console.log("broadcasting start")
-						games[room].broadcast({status: "start"})
-						games[room].waiting_for_players = false;
-					}else{console.log("rejected a person from starting")}
-			}
+			
+			if(message.status == "open") handler.exec("open", message);
+			else if(games[room].players[id] != undefined) handler.exec(message.status, message);
+			else console.log("unauthorized");
 		}catch(e){console.log(e);}
 		
 	});
@@ -187,7 +210,6 @@ wss.on("connection", function(ws, require)
 		if(games[room].players[message.id] != undefined && !games[room].players[message.id].closed) {
 			games[room].players[message.id].ws = ws;
 
-			// edge case where host disconnected post start
 			if(games[room].host.id == message.id){
 				games[room].host.ws = ws;
 			}
@@ -202,6 +224,5 @@ wss.on("connection", function(ws, require)
 		return 0;
 	}
 });
-
 
 
