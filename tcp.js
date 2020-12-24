@@ -86,7 +86,7 @@ class Game {
 		if(this.size==8) throw new Error("Game is full.");
 		var id = this.generateId();
 
-		this.players[this.generateId()] = new Player(id, p_websocket, name);
+		this.players[id] = new Player(id, p_websocket, name);
 		this.size++;
 
 		return id;
@@ -118,7 +118,7 @@ class Game {
 
 	getNames(){
 		var names = [];
-		for(var player in this.players) if(!player.closed) names.push(this.players[player].name);
+		for(var player in this.players) if(!this.players[player].closed) names.push(this.players[player].name);
 		return names;
 	}
 }
@@ -176,7 +176,7 @@ wss.on("connection", function(ws, require)
 		else if(games[room].waiting_for_players){
 			console.log("player joined room: " + room)
 			try{
-				if(!recon(message)) id = games[room].addPlayer(ws, message.name);
+				if(recon(message) == 0) id = games[room].addPlayer(ws, message.name);
 			}catch(e){/*game is full; or person already exists*/ console.log(e)}
 		}else{/*game already started; TODO handle reconnecting players*/
 			recon(message);
