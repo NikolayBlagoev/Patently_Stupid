@@ -133,7 +133,7 @@ class Player {
 	}
 
 	close(){
-		this.console = true;
+		this.closed = true;
 	}
 
 	open(){
