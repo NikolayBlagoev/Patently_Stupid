@@ -118,7 +118,8 @@ let id;
 socket.onopen = function(){
 	socket.send(JSON.stringify({
 		status: "open",
-		room: new URL(window.location.href).searchParams.get("game")
+		room: new URL(window.location.href).searchParams.get("game"),
+		id: parseCookie("sessionId")
 	}));
 }
 
@@ -133,4 +134,14 @@ socket.onmessage = function(event){
 			doNext();
 			break;
 	}
+}
+
+function parseCookie(name){
+	var all = document.cookie.split(/[\s,;=]+/);
+	var i = all.indexOf(name);
+
+	if(i >= 0)
+		return all[all.indexOf(name)+1];
+	
+	return -1;
 }
