@@ -81,7 +81,7 @@ sm.add(function spermGang(){
 
 sm.add(function transition(){
 	setBg("#353b4222");
-}, 15, function(){setBg("#353b4222");fill("#eedcb2")});
+}, 15, function(){setBg("#353b42"); fill("#eedcb2")});
 
 var prev;
 var part2_size = 5;
@@ -92,8 +92,13 @@ sm.add(function part2(){
 		}
 		else{
 			for(var i = 1; i <= 3.2; i += 0.015){
-				ellipse(prev.x*1/i+mouseX*(1-1/i), prev.y*1/i+mouseY*(1-1/i), part2_size, part2_size);
-				ellipse(prev.x*(1-1/i)+mouseX*(1/i), prev.y*(1-1/i)+mouseY*(1/i), part2_size, part2_size);
+				ellipse(prev.x * 1 / i + mouseX * (1 - 1 / i)
+					, prev.y * 1 / i + mouseY * (1 - 1 / i)
+					, part2_size, part2_size);
+
+				ellipse(prev.x * (1 - 1 / i) + mouseX * ( 1 / i)
+					, prev.y * (1 - 1 / i) + mouseY * (1 / i)
+					, part2_size, part2_size);
 			}
 		}
 		prev = {x: mouseX, y: mouseY};
@@ -102,7 +107,6 @@ sm.add(function part2(){
 		prev = undefined;
 	}
 });
-
 
 function setup(){
 	var canvas = createCanvas(window.innerWidth, window.innerHeight);
@@ -119,8 +123,13 @@ function draw(){
 }
 
 function setBg(col){
+	_CurrentBG = col;
 	fill(col);
 	rect(0, 0, width, height);
+}
+
+function setFill(col){
+	fill(col);
 }
 
 class spermie{
@@ -166,8 +175,21 @@ class spermie{
 	}
 }
 
+let _CurrentBG = 255;
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+	var old = new Image();
+	var canvas = document.getElementById("defaultCanvas0");
+	old.src = canvas.toDataURL();
+  	
+	
+	old.onload = function() {
+		resizeCanvas(windowWidth, windowHeight);
+		push();
+		setBg(_CurrentBG);
+        canvas.getContext('2d').drawImage(this, 0, 0);
+		pop();
+    };
+
 }
 
 window.onload = function(){
