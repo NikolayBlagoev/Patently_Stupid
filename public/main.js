@@ -22,20 +22,47 @@ class Handler {
 function Player(id, p_websocket) {
 	this.id = id;
 	this.p_websocket = p_websocket;
-};
-
-function setup(){
-	var canvas = createCanvas(window.innerWidth, window.innerHeight);
-	canvas.parent("canvas");
-
-	for(var i = 0; i < spermie_count; i++)
-		spermies[i] = new spermie(random(width), random(height), 4, 5);
-
-	noStroke();
 }
 
+class state_machine{
+	constructor(){
+		this.functions = [];
+		this.head = 0;
+		this.iterator = 0;
+	}
+
+	add(func, iterations, intermediate){
+		this.functions.push({function: func, iterations: iterations, intermediate: intermediate});
+	}
+
+	exec(index){
+		this.functions[index]();
+	}
+
+	execHead(){
+		if(this.functions[this.head].iterations == undefined)
+			this.functions[this.head].function();
+		else{
+			if(this.iterator <= this.functions[this.head].iterations){
+				this.functions[this.head].function();
+				this.iterator++;
+			}
+			else this.doNext(this.functions[this.head].intermediate);
+		}
+	}
+
+	doNext(intermediate){
+		if(intermediate != undefined) intermediate();
+		this.iterator = 0;
+		this.head++;
+	}
+
+}
+
+let sm = new state_machine();
+
 var speed = 4;
-function draw(){
+sm.add(function spermGang(){
 	setBg("#1e264055");
 	fill("#f3eac0");
 
@@ -48,8 +75,47 @@ function draw(){
 	});
 
 	if(spermies.length == 0){
-		//setBg("#1e2640");
+		sm.doNext();
 	}
+});
+
+sm.add(function transition(){
+	setBg("#353b4222");
+}, 15, function(){setBg("#353b4222");fill("#eedcb2")});
+
+var prev;
+var part2_size = 5;
+sm.add(function part2(){
+	if(mouseIsPressed){
+		if(prev == undefined){
+			ellipse(mouseX, mouseY, part2_size, part2_size);
+		}
+		else{
+			for(var i = 1; i <= 3.2; i += 0.015){
+				ellipse(prev.x*1/i+mouseX*(1-1/i), prev.y*1/i+mouseY*(1-1/i), part2_size, part2_size);
+				ellipse(prev.x*(1-1/i)+mouseX*(1/i), prev.y*(1-1/i)+mouseY*(1/i), part2_size, part2_size);
+			}
+		}
+		prev = {x: mouseX, y: mouseY};
+	}
+	else{
+		prev = undefined;
+	}
+});
+
+
+function setup(){
+	var canvas = createCanvas(window.innerWidth, window.innerHeight);
+	canvas.parent("canvas");
+
+	for(var i = 0; i < spermie_count; i++)
+		spermies[i] = new spermie(random(width), random(height), 4, 5);
+
+	noStroke();
+}
+
+function draw(){
+	sm.execHead();
 }
 
 function setBg(col){
