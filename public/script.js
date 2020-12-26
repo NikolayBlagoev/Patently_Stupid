@@ -21,12 +21,15 @@ function play(){
 		alert("Invalid room code");
 		return;
 	} 
+	
 	if(name != ""){
 		var d = new Date();
   		d.setTime(d.getTime() + (4*24*60*60*1000));
-  		var expires = "expires="+ d.toUTCString();
-		document.cookie = "Username=" + name + ";" + expires + ";path=/";
-		console.log(document.cookie)
+		var expires = "expires="+ d.toUTCString();
+		document.cookie;
+		document.cookie = "user=" + name + ";";
+		document.cookie;
+
 		window.location.href='../play/?game='+roomcode;
 	} else alert("enter a username");
 }
@@ -37,8 +40,9 @@ function create(){
 		var d = new Date();
   		d.setTime(d.getTime() + (4*24*60*60*1000));
   		var expires = "expires="+ d.toUTCString();
-		document.cookie = "Username=" + name + ";" + expires + ";path=/";
-		console.log(document.cookie)
+		document.cookie;
+		document.cookie = "user=" + name + ";";
+		document.cookie;
 		window.location.href='../create';
 	} else alert("enter a username");
 }

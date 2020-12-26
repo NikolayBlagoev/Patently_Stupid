@@ -221,7 +221,7 @@ socket.onopen = function(){
 		status: "open",
 		room: new URL(window.location.href).searchParams.get("game"),
 		id: parseCookie("sessionId"),
-		name: parseCookie("Username")
+		name: parseCookie("user")
 	}));
 }
 
