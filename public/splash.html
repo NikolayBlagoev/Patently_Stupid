@@ -14,42 +14,30 @@
 						<span>Patently Stupid</span>	
 					</div>
 					<div class="names">
-						<div id="leftTexts" style="width: 25%; display: block; justify-content: space-between">
-							<span  style="display: block; margin-top: 2%;">Username:</span>	
-
-							<span style="display: block; margin-top: 0.9em;">Room number: </span>
-							
+						<div class="textbox" onclick="selectUname()">
+							<span>Username:</span>	
+							<input type="text" id="uname" name="uname" onkeypress="press(e)" autofocus value="">
 						</div>	
-						<div style="justify-content: space-between;">
-							<input type="text" id="uname" name="uname" onkeypress="press(event)" autofocus value=""><br>
-
-							<input type="text" id="roomcode" name="roomcode" 
-							onkeypress="press(event)" autofocus value="" style="display: block; margin-top: 6%;"><br>
+						<div class="textbox" onclick="selectRoomCode() "style="margin-top: 10px">
+							<span>Code:</span>	
+							<input type="text" id="roomcode" name="roomcode" onkeypress="press(e)" oninput="roomcodeChanged(this)">
 						</div>	
 					</div>
-
-					<div class="play" id="join" onclick="play()">
-	
-					</div>
-					<div class="play" id="create" onclick="create()">
-
-					</div>
-					<div class=cont>
-						
-					</div>	
+					<div class="play" id="join" onclick="play()"></div>
+					<div class="play" id="create" onclick="create()"></div>
+					<div class=cont></div>	
 					<div class="how">
 						<span id="myBtn"></span>	
 					</div>	
-					<div id="myModal" class="modal">
-						<div class="modal-content">
-   						<span class="close">&times;</span>
-						<div id="rules">
-							<p>These are the rules of the game:</p>
-							<p>TODO</p>	
-						</div>	
-  						</div>
-					</div>				
 				</div>
+				<div id="myModal" class="modal">
+					<div class="modal-content">
+   					<span class="close">&times;</span>
+					<div id="rules">
+						<p>These are the rules of the game:</p>
+						<p>TODO</p>	
+					</div>	
+				</div>				
 			</div>	
 		</main>
 	</body>

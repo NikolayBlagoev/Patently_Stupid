@@ -98,10 +98,6 @@ body
 	justify-content: center;
 }
 
-input{
-	-webkit-appearance: none;
-}
-
 .title
 {
 	user-select: none;
@@ -187,9 +183,13 @@ a:visited,a:active
 	content: "How to play?";
 }
 
-@media screen and (max-width: 500px),  screen and (max-height: 300px)
-{
+@media screen and (max-width: 500px),  screen and (max-height: 300px){
 	.play
+	{
+		display:none;
+	}
+	
+	.names
 	{
 		display:none;
 	}
@@ -197,7 +197,9 @@ a:visited,a:active
 	.menu
 	{
 		height: 300px; 
+		min-height: 300px;
 	}
+
 	#rules
 	{
 		display: none;
@@ -219,7 +221,7 @@ a:visited,a:active
 	{
 		display: block;
 		white-space: pre;
-		content: "Your screensize does not match the requirements for this game. \A\A Please try another device."
+		content: "Your screensize does not match the requirements for this game. \A\A Please try another device.";
 	}
 
 }
@@ -231,3 +233,37 @@ a:visited,a:active
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
+
+.textbox{
+	border: solid #515151 1px;
+	display: flex;
+	padding: 10px;
+	width: 65%;
+}
+
+.textbox span{
+	user-select: none;
+	font-family: arial;
+	color: #444455;
+	font-size: 1em;
+	margin-right: 5px;
+	font-weight: bold;
+}
+
+.textbox input{
+	border: none;
+	background: transparent;
+}
+
+.textbox input:focus{
+	border: none;
+	outline: none;
+}
+
+.textbox:hover, .textbox:focus-within{
+	box-shadow: 4px 4px #555577;
+}
+.textbox:hover span{
+	text-shadow: 0.5px 0.5px #333344;
+}
+
