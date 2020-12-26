@@ -157,7 +157,7 @@ class spermie{
 
 
 		//an-hero
-		if(this.exploded && this.pos.x > width || this.pos.y > height || this.pos.x < 0 || this.pos.y < 0)
+		if(this.exploded && (this.pos.x > width || this.pos.y > height || this.pos.x < 0 || this.pos.y < 0))
 			spermies.splice(this.index, 1);
 	}
 
