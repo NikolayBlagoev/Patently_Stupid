@@ -98,6 +98,10 @@ body
 	justify-content: center;
 }
 
+input{
+	-webkit-appearance: none;
+}
+
 .title
 {
 	user-select: none;
