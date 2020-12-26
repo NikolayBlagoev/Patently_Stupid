@@ -16,6 +16,7 @@ function play(){
 					window.location.href = '../play/?game=' + roomcode;
 				}
 				else{
+					document.getElementById("roomcode").value="";
 					alert("room does not exist");
 				}
 			}());
