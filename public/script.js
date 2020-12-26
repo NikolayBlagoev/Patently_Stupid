@@ -12,7 +12,15 @@ function play(){
 		alert("Please, enter a room code");
 		return;
 	} 
+	if(roomcode.includes("GAME")){
+		roomcode = roomcode.split("?GAME=")[1];
 	
+	}
+	//this method doesnt work
+	if(roomcode.length>3) {
+		alert("Invalid room code");
+		return;
+	} 
 	if(name != ""){
 		var d = new Date();
   		d.setTime(d.getTime() + (4*24*60*60*1000));
