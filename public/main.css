@@ -24,12 +24,12 @@ body{
 	font-size: 42pt;
 }
 
-ul{
+ol{
 
-	text-align: center;
+	text-align: left;
 	border: solid white 2px;
-	padding: 0px 0;
-	margin: 10px;
+	padding: 2% 0% 0% 5%;
+	margin: 0px;
 }
 
 li{
