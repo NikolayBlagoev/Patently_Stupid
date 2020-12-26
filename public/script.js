@@ -23,9 +23,6 @@ function play(){
 	} 
 	
 	if(name != ""){
-		var d = new Date();
-  		d.setTime(d.getTime() + (4*24*60*60*1000));
-		var expires = "expires="+ d.toUTCString();
 		document.cookie;
 		document.cookie = "user=" + name + ";";
 		document.cookie;
@@ -37,9 +34,6 @@ function play(){
 function create(){
 	var name = document.getElementById("uname").value;
 	if(name != ""){
-		var d = new Date();
-  		d.setTime(d.getTime() + (4*24*60*60*1000));
-  		var expires = "expires="+ d.toUTCString();
 		document.cookie;
 		document.cookie = "user=" + name + ";";
 		document.cookie;

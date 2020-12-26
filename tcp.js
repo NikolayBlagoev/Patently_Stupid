@@ -14,7 +14,7 @@ app.use(express.static(__dirname + "/public"));
 
 const wss = new websocket.Server({server});
 
-const MAX_GAMES = 2;
+const MAX_GAMES = 40;
 var games = [];
 games.size = 0;
 
@@ -130,7 +130,7 @@ app.get("/create", function(req, res)
 	var serum = true;
 	var code = '';
 	while(serum){
-		//Three character codes (around 28*28*28 possible options)
+		//Three character codes (around 20*20*20 possible options)
 		//To avoid collisions MAX ROOM SIZE should be less than 10% of possible room codes
 		for(var i = 0 ; i<3; i++) code += String.fromCharCode(64 + Math.floor((Math.random() * 20) + 1));
 		
