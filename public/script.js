@@ -7,7 +7,7 @@ function press(event) {
 function play(){
 	console.log("hekk")
 	var name = document.getElementById("uname").value;
-	var roomcode = document.getElementById("roomcode").value;
+	var roomcode = document.getElementById("roomcode").value.toUpperCase();
 	if(roomcode==""){
 		alert("Please, enter a room code");
 		return;
