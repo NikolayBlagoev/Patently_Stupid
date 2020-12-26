@@ -133,7 +133,6 @@ app.get("/create", function(req, res)
 		//Three character codes (around 20*20*20 possible options)
 		//To avoid collisions MAX ROOM SIZE should be less than 10% of possible room codes
 		for(var i = 0 ; i<3; i++) code += String.fromCharCode(64 + Math.floor((Math.random() * 20) + 1));
-		
 		if(games[code] == undefined) serum=false;
 	}
 
@@ -142,6 +141,12 @@ app.get("/create", function(req, res)
 
 	res.redirect("/play/?game=" + code);
 
+});
+
+app.get("/exists", function(req, res){
+	if(games[req.query.game] == undefined) res.send(false);
+	else res.send(true);
+	res.end;
 });
 
 app.get("/*", function(req, res)

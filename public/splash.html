@@ -16,15 +16,14 @@
 					<div class="names">
 						<div class="textbox" onclick="selectUname()">
 							<span>Username:</span>	
-							<input type="text" id="uname" name="uname" onkeypress="press(e)" autofocus value="">
+							<input type="text" id="uname" name="uname" onkeypress="press(event)" autofocus value="">
 						</div>	
 						<div class="textbox" onclick="selectRoomCode() "style="margin-top: 10px">
 							<span>Code:</span>	
-							<input type="text" id="roomcode" name="roomcode" onkeypress="press(e)" oninput="roomcodeChanged(this)">
+							<input type="text" id="roomcode" name="roomcode" onkeypress="press(event)" oninput="roomcodeChanged(this)">
 						</div>	
 					</div>
-					<div class="play" id="join" onclick="play()"></div>
-					<div class="play" id="create" onclick="create()"></div>
+					<div class="play" id="start" onclick="play()">Create Game!</div>
 					<div class=cont></div>	
 					<div class="how">
 						<span id="myBtn"></span>	
