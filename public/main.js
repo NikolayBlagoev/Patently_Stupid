@@ -221,7 +221,7 @@ socket.onopen = function(){
 		status: "open",
 		room: new URL(window.location.href).searchParams.get("game"),
 		id: parseCookie("sessionId"),
-		name: parseCookie("Username")
+		name: parseCookie("user")
 	}));
 }
 
@@ -238,9 +238,15 @@ socket.onmessage = function(event){
 	});
 	handler.add(function names(){
 		var content = "";
+		var count = 0;
 		stats.names.forEach(name => {
-			content += "<li>" + name + "</li>";
+			content += "<ol>" + (count+1)+". "+name + "</ol>";
+			count++;
 		});
+		while(count<8){
+			content += "<ol>"+ (count+1)+". "+" </ol>";
+			count++;
+		}
 		document.getElementById("players").innerHTML = content;
 	});
 

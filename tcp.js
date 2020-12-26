@@ -130,6 +130,8 @@ app.get("/create", function(req, res)
 	var serum = true;
 	var code = '';
 	while(serum){
+		//Three character codes (around 28*28*28 possible options)
+		//To avoid collisions MAX ROOM SIZE should be less than 10% of possible room codes
 		for(var i = 0 ; i<3; i++) code += String.fromCharCode(64 + Math.floor((Math.random() * 20) + 1));
 		
 		if(games[code] == undefined) serum=false;
@@ -208,8 +210,12 @@ wss.on("connection", function(ws, require)
 
 	ws.on('close', function close() {
 		try{
-			games[room].players[id].close();
-			games[room].broadcast({status: "names", names: games[room].getNames()})
+			if(games[room].host.id==id){
+				//special case where host disconnects. Need to close room.
+			}else{
+				games[room].players[id].close();
+				games[room].broadcast({status: "names", names: games[room].getNames()})
+			}
 		}catch(e){console.log(e)}
 
 	});
