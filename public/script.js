@@ -13,7 +13,7 @@ function join(){
 
 	if(document.getElementById("start").state == "join"){
 		if(name != ""){
-			fetch(window.location.href + "exists/?game=" + roomcode)
+			fetch(window.location.origin + "/exists/?game=" + roomcode)
 			.then(response => response.json())
 			.then(data => function(){
 				if(data){
@@ -124,4 +124,3 @@ function setState(state){
 			break;
 	}
 }
-

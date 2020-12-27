@@ -63,7 +63,7 @@ let sm = new state_machine();
 
 var speed = 4;
 sm.add(function spermGang(){
-	setBg("#1e264055");
+	setBg("#44445555");
 	fill("#f3eac0");
 
 	deathRate = spermie_count/200;
@@ -189,11 +189,10 @@ function windowResized() {
         canvas.getContext('2d').drawImage(this, 0, 0);
 		pop();
     };
-
 }
 
 window.onload = function(){
-	document.getElementById("code").innerHTML = new URL(window.location.href).searchParams.get("game");;
+	document.getElementById("code").innerHTML = new URL(window.location.href).searchParams.get("game");
 	
 }
 
@@ -241,11 +240,11 @@ socket.onmessage = function(event){
 		var content = "";
 		var count = 0;
 		stats.names.forEach(name => {
-			content += "<ol>" + (count+1)+". "+name + "</ol>";
+			content += "<li>" + (count+1)+". "+name + "</li>";
 			count++;
 		});
 		while(count<8){
-			content += "<ol>"+ (count+1)+". "+" </ol>";
+			content += "<li>"+ (count+1)+". "+" </li>";
 			count++;
 		}
 		document.getElementById("players").innerHTML = content;

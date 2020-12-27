@@ -30,7 +30,7 @@ body{
 }
 
 ol{
-
+	list-style:none;
 	text-align: left;
 	border: solid white 2px;
 	padding: 1% 0% 1% 5%;
@@ -95,11 +95,15 @@ li:not(:last-child){
 }
 
 #start:hover{
-	background-color: #dc9750;
 	padding: 15px 35px;
 }
 
-#start:active{
+#start:hover, #copy:hover{
+	background-color: #dc9750;
+	cursor: pointer;
+}
+
+#start:active, #copy:active{
 	background-color: #922c40;
 }
 
@@ -111,6 +115,3 @@ li:not(:last-child){
 	z-index:-1;
 }
 
-button:hover{
-	cursor: pointer;;
-}
