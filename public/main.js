@@ -1,6 +1,6 @@
 var host = location.origin.replace(/^http/, 'ws')
 var socket = new WebSocket(host);
-
+let myName=parseCookie("user");
 let spermies = [];
 var spermie_count = 100;
 let players = [];
@@ -121,8 +121,7 @@ sm.add(function part2(){
 			}
 		}
 		prev = {x: mouseX, y: mouseY};
-	}
-	else{
+	}else{
 		prev = undefined;
 	}
 });
@@ -247,6 +246,7 @@ socket.onopen = function(){
 
 socket.onmessage = function(event){
 	var stats = JSON.parse(event.data);
+
 	var handler = new Handler();
 
 	handler.add(function initial(){
@@ -260,9 +260,15 @@ socket.onmessage = function(event){
 	handler.add(function names(){
 		var content = "";
 		var count = 0;
+		var serum = true;
 		stats.names.forEach(name => {
-			content += "<li>" + (count+1)+". "+name + "</li>";
-			count++;
+			if(serum&&name==myName){
+				content += "<li id=\"youplayer\">" + (count+1)  +". "+ name + "  	👤</li>";
+				count++;
+			}else{
+				content += "<li>" + (count+1)  +". "+ name + "</li>";
+				count++;
+			}
 		});
 		//while(count<8){
 		//	content += "<li>"+ (count+1)+". "+" </li>";

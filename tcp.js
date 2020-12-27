@@ -116,7 +116,15 @@ app.get("/play", function(req, res)
 	if(games[req.query.game] == undefined) res.sendFile(__dirname + "/public/404.html");
 	else{
 		if(games[req.query.game] != 1 && games[req.query.game].isFull()) res.send("game is full >_<");
-		else res.sendFile(__dirname + "/public/main.html");
+		else{
+			if(req.cookies==undefined || req.cookies.user==undefined || req.cookies.user=="" ){
+				res.redirect(req.url.toString().replace("/play",""));
+				return;
+			}else{
+				res.sendFile(__dirname + "/public/main.html");
+			}
+			
+		} 
 	}
 });
 
