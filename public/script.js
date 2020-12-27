@@ -18,6 +18,7 @@ function play(){
 				else{
 					document.getElementById("roomcode").value="";
 					alert("room does not exist");
+					return;
 				}
 			}());
 		} 
