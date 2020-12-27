@@ -2,7 +2,7 @@ var host = location.origin.replace(/^http/, 'ws')
 var socket = new WebSocket(host);
 
 let spermies = [];
-var spermie_count = 300;
+var spermie_count = 100;
 let players = [];
 
 class Handler {
@@ -61,10 +61,10 @@ class state_machine{
 
 let sm = new state_machine();
 
-var speed = 4;
+var speed = 10;
 sm.add(function spermGang(){
 	setBg("#44445555");
-	fill("#f3eac0");
+	fill("#555577");
 
 	deathRate = spermie_count/200;
 	
@@ -77,13 +77,32 @@ sm.add(function spermGang(){
 	if(spermies.length == 0){
 		sm.doNext();
 	}
+	
+	if(prev == undefined || (prev.x != mouseX && prev.y != mouseY)){
+		fill("#922c40");
+		if(prev == undefined){
+			ellipse(mouseX, mouseY, part2_size, part2_size);
+		}
+		else{
+			for(var i = 1; i <= 2.2; i += 0.015){
+				ellipse(prev.x * 1 / i + mouseX * (1 - 1 / i)
+					, prev.y * 1 / i + mouseY * (1 - 1 / i)
+					, part2_size, part2_size);
+	
+				ellipse(prev.x * (1 - 1 / i) + mouseX * ( 1 / i)
+					, prev.y * (1 - 1 / i) + mouseY * (1 / i)
+					, part2_size, part2_size);
+			}
+		}
+	}
+	prev = {x: mouseX, y: mouseY};
 });
 
 sm.add(function transition(){
 	setBg("#353b4222");
 }, 15, function(){setBg("#353b42"); fill("#eedcb2")});
 
-var prev;
+var prev = undefined;
 var part2_size = 5;
 sm.add(function part2(){
 	if(mouseIsPressed){
@@ -235,6 +254,7 @@ socket.onmessage = function(event){
 	});
 	handler.add(function start(){
 		doNext();
+		//sm.doNext();
 	});
 	handler.add(function names(){
 		var content = "";
@@ -243,10 +263,10 @@ socket.onmessage = function(event){
 			content += "<li>" + (count+1)+". "+name + "</li>";
 			count++;
 		});
-		while(count<8){
-			content += "<li>"+ (count+1)+". "+" </li>";
-			count++;
-		}
+		//while(count<8){
+		//	content += "<li>"+ (count+1)+". "+" </li>";
+		//	count++;
+		//}
 		document.getElementById("players").innerHTML = content;
 	});
 
