@@ -63,7 +63,7 @@ let sm = new state_machine();
 
 var speed = 10;
 sm.add(function spermGang(){
-	setBg("#44445555");
+	setBg("#0b111755");
 	fill("#555577");
 
 	deathRate = spermie_count/200;
@@ -135,6 +135,7 @@ function setup(){
 		spermies[i] = new spermie(random(width), random(height), 4, 5);
 
 	noStroke();
+	setBg("#0b1117");
 }
 
 function draw(){
