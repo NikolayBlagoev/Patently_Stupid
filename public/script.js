@@ -11,18 +11,26 @@ function join(){
 	var name = document.getElementById("uname").value;
 	var roomcode = document.getElementById("roomcode").value;
 
-	if(name != ""){
-		fetch(window.location.origin + "/exists/?game=" + roomcode)
-		.then(response => response.json())
-		.then(data => function(){
-			if(data){
-				document.cookie = "user=" + name + ";";
-				window.location.href = '../play/?game=' + roomcode;
-			}
-			else alert("room does not exist");
-		}());
-	} 
-	else alert("enter a username");
+	if(document.getElementById("start").state == "join"){
+		if(name != ""){
+			fetch(window.location.href + "exists/?game=" + roomcode)
+			.then(response => response.json())
+			.then(data => function(){
+				if(data){
+					document.cookie = "user=" + name + ";";
+					window.location.href = '../play/?game=' + roomcode;
+				}
+				else{
+					document.getElementById("roomcode").value="";
+					alert("room does not exist");
+				}
+			}());
+		} 
+		else alert("enter a username");
+	}
+	else{
+		create();
+	}
 }
 
 function create(){
