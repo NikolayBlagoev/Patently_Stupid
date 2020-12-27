@@ -198,7 +198,8 @@ window.onload = function(){
 }
 
 function copyCode(){
-	navigator.clipboard.writeText(window.location)
+	var link = window.location.toString();
+	navigator.clipboard.writeText(link.replace("/play", ""));
 }
 
 function doNext(){

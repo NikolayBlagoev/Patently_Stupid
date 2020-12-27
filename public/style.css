@@ -124,7 +124,6 @@ li
 .how
 {
 	margin-top:4%;
-	font-size:18;
 	text-decoration: underline;
 	font-style:italic;
 	color: #bababa;
@@ -259,10 +258,10 @@ a:visited,a:active
 	outline: none;
 }
 
-.textbox:hover, .textbox:focus-within{
+.textbox:hover, .textbox:focus-within {
 	box-shadow: 4px 4px #555577;
 }
-.textbox:hover span{
+.textbox:hover span, .textbox:focus-within {
 	text-shadow: 0.5px 0.5px #333344;
 }
 
