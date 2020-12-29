@@ -13,8 +13,8 @@ function join(){
 
 	if(document.getElementById("start").state == "join"){
 		if(name != ""){
-			if(name.length>20){
-				alert("username cannot be longer than 20 characters");
+			if(name.length>10){
+				alert("username cannot be longer than 10 characters");
 				return;
 			} 
 			fetch(window.location.origin + "/exists/?game=" + roomcode)
@@ -42,8 +42,8 @@ function join(){
 function create(){
 	var name = document.getElementById("uname").value;
 	if(name != ""){
-		if(name.length>20){
-			alert("username cannot be longer than 20 characters");
+		if(name.length>10){
+			alert("username cannot be longer than 10 characters");
 			return;
 		} 
 		document.cookie = "user=" + name + ";";

@@ -31,7 +31,7 @@ class Game {
 		this.size = 1;
 		this.players = [];
 		this.ids = [];
-
+		this.closeFunction = undefined;
 		this.waiting_for_players = true;
 		this.closed = false;
 	
@@ -121,7 +121,7 @@ app.get("/play", function(req, res)
 				res.redirect(req.url.toString().replace("/play",""));
 				return;
 			}else{
-				if(req.cookies.user.length>20){
+				if(req.cookies.user.length>10){
 					res.sendFile(__dirname + "/public/Invalid.html");
 					return;
 				}
@@ -232,7 +232,13 @@ wss.on("connection", function(ws, require)
 	ws.on('close', function close() {
 		try{
 			if(games[room].host.id==id){
-				//special case where host disconnects. Need to close room.
+				games[room].closeFunction = setTimeout(function(){ 
+					games[room].players.forEach(element => {
+						element.ws.close();
+					});
+					games[room]=undefined;
+					console.log("Closed room: "+room)
+				 }, 3000*20);
 			}else{
 				games[room].players[id].close();
 				games[room].broadcast({status: "names", names: games[room].getNames()})
@@ -263,6 +269,12 @@ wss.on("connection", function(ws, require)
 
 			if(games[room].host.id == message.id){
 				games[room].host.ws = ws;
+				if(games[room].closeFunction==undefined){
+
+				}else{
+					clearTimeout(games[room].closeFunction);
+					console.log("Game close cancelled");
+				}
 			}
 
 			games[room].players[message.id].open();
