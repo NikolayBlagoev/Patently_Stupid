@@ -121,6 +121,10 @@ app.get("/play", function(req, res)
 				res.redirect(req.url.toString().replace("/play",""));
 				return;
 			}else{
+				if(req.cookies.user.length>20){
+					res.sendFile(__dirname + "/public/Invalid.html");
+					return;
+				}
 				res.sendFile(__dirname + "/public/main.html");
 			}
 			
@@ -130,6 +134,10 @@ app.get("/play", function(req, res)
 
 app.get("/create", function(req, res)
 {
+	if(req.cookies==undefined||req.cookies.user==undefined||req.cookies.user==""||req.cookies.user.length>20){
+		res.sendFile(__dirname + "/public/Invalid.html");
+		return;
+	}
 	if(games.size == MAX_GAMES){
 		res.send("We are full");
 		return;
